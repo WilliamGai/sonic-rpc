@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sonic</groupId>
-	<artifactId>sonic-tcp-rpc</artifactId>
+	<artifactId>sonic-rpc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -85,7 +85,7 @@
 	<modules>
 		<module>sonic-rpc-core</module>
 		<module>sonic-rpc-api</module>
-		<module>sonic-rcp-consumer</module>
+		<module>sonic-rpc-consumer</module>
 		<module>sonic-rpc-provider</module>
 	</modules>
 	<build>

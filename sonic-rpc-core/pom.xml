@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.sonic</groupId>
-		<artifactId>sonic-tcp-rpc</artifactId>
+		<artifactId>sonic-rpc</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>sonic-tcp-rpc-core</artifactId>
-	<name>sonic-tcp-rpc-core</name>
+	<artifactId>sonic-rpc-core</artifactId>
+	<name>sonic-rpc-core</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
