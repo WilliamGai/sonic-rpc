@@ -1,0 +1,94 @@
+<configuration>
+	<!-- 参考 http://blog.csdn.net/kkgbn/article/details/51457686 -->
+	<!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d %p (%file:%line\)- %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="baselog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>log/base.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/base.log.%d</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d (%file:%line\)- %m%n
+			</pattern>
+		</encoder>
+	</appender>
+		<appender name="userlog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>log/user.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/user.log.%d</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d (%file:%line\)- %m%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="recordlog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>log/record.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/record.log.%d</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d,%m%n
+			</pattern>
+		</encoder>
+	</appender>
+	<!--  core started -->
+	<appender name="corelog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>log/core.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/core.log.%d</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d (%file:%line\)- %m%n
+			</pattern>
+		</encoder>
+	</appender>
+	<!--  core end -->
+	<!--  rpc started -->
+	<appender name="rpclog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>log/rpc.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/rpc.log.%d</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				%d (%file:%line\)- %m%n
+			</pattern>
+		</encoder>
+	</appender>
+	<!--  rpc end -->
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+	<!-- logger name="com.sincetimes" level="info" -->
+	<logger name="com.sincetimes" level="debug">
+		<appender-ref ref="baselog" />
+	</logger>
+	<logger name="USER">
+		<appender-ref ref="userlog" />
+	</logger>
+	<logger name="RECORD">
+		<appender-ref ref="recordlog" />
+	</logger>
+	<logger name="CORE">
+		<appender-ref ref="corelog" />
+	</logger>
+		<logger name="RPC">
+		<appender-ref ref="rpclog" />
+	</logger>
+	<jmxConfigurator/>
+</configuration>

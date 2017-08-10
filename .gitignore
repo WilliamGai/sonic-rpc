@@ -1,0 +1,7 @@
+/target/
+/log/
+*/upload/*
+/*log/
+*.log
+*.class
+*.log.*
