@@ -3,6 +3,8 @@ package org.sonic.rpc.provider;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.BeanFactoryUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -34,7 +36,7 @@ public class TestJson {
 		ja.add(ja1);
 		ja.add(ja2);
 		ja.add(ja3);
-		
+//		BeanFactoryUtils.transformedBeanName(name)
 		System.out.println(ja.toJSONString());
 	}
 }

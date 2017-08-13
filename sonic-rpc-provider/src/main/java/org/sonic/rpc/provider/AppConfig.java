@@ -3,9 +3,9 @@ package org.sonic.rpc.provider;
 import java.util.Map;
 
 import org.sonic.rpc.core.LogCore;
+import org.sonic.rpc.core.annotation.SService;
 import org.sonic.rpc.core.invoke.ProviderConfig;
 import org.sonic.rpc.core.proxy.ProviderProxyFactory;
-import org.sonic.rpc.provider.annotation.SService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -32,8 +32,8 @@ public class AppConfig {
 	@Bean
 	@Autowired
 	ProviderProxyFactory getProviderProxyFactory(ProviderConfig providerConfig, ApplicationContext ct){
-		Map<String,Object> map = ct.getBeansWithAnnotation(SService.class);
 		ProviderProxyFactory pf = new ProviderProxyFactory(providerConfig);
+		Map<String,Object> map = ct.getBeansWithAnnotation(SService.class);
 		map.values().forEach(pf::register);
 		LogCore.BASE.info("ct.get======={}",map);
 		return pf;

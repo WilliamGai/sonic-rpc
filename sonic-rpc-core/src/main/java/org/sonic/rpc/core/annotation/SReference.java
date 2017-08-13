@@ -8,9 +8,8 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Reference
- * 
- * @author william.liangf
+ * SReference
+ * 希望这个注解可以更优雅的使用
  * @export
  * @author bao
  * @date 2017年8月10日 下午3:40:27

@@ -1,6 +1,6 @@
 package org.sonic.rpc.provider;
 
-import org.sonic.rpc.provider.annotation.SService;
+import org.sonic.rpc.core.annotation.SService;
 import org.sonic.tcp.rpc.api.PlateService;
 
 @SService
