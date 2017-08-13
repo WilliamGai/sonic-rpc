@@ -6,14 +6,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Resource;
-
 import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.StepWatchUtil;
 import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.invoke.ConsumerConfig;
 import org.sonic.rpc.core.proxy.ConsumerProxyFactory;
-import org.sonic.tcp.rpc.api.SpeakInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -23,7 +20,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Hello world!
- *
  */
 @SpringBootApplication
 public class ConsumerMainApp implements CommandLineRunner{
@@ -36,14 +32,16 @@ public class ConsumerMainApp implements CommandLineRunner{
 	@Autowired
 	PeopleController peopleController;
 	
-	@Resource
-	private SpeakInterface speakInterface;
+//	@Resource
+//	private SpeakInterface speakInterface;
 	
 	private static final int _COUNT = 100;
 	private static final SecureRandom RAND = new SecureRandom();
 	
 	@Value("${consumer.url}") String url;
 	public static void main(String[] args) {
+		LogCore.BASE.info("启动参数为{}", args);
+
 		ConfigurableApplicationContext context = SpringApplication.run(ConsumerMainApp.class, args);
 //		LogCore.BASE.info("测试配置文件调用{}", context.getEnvironment().getActiveProfiles());
 ////		LogCore.BASE.info("{}",Util.prettyJsonStr(context.getEnvironment()));
@@ -60,7 +58,7 @@ public class ConsumerMainApp implements CommandLineRunner{
 		LogCore.BASE.info("consumerCf={}",Util.prettyJsonStr(consumerCf));
 		LogCore.BASE.info("app ={}",app);
 		LogCore.BASE.info("url ={}",url);
-		LogCore.BASE.info("speakInterface ={}",speakInterface.getClass());
+//		LogCore.BASE.info("speakInterface ={}",speakInterface.getClass());
 		final ExecutorService exec = Executors.newFixedThreadPool(50);
 
 		AtomicInteger count = new AtomicInteger(0);

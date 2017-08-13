@@ -4,8 +4,8 @@ import org.sonic.tcp.rpc.api.People;
 import org.sonic.tcp.rpc.api.SpeakInterface;
 import org.springframework.stereotype.Component;
 
-@Component("speakInterface")
-public class SpeakInterfaceImpl implements SpeakInterface {
+@Component("speakInterface2")
+public class SpeakInterfaceImpl2 implements SpeakInterface {
 	public String speak(People people) {
 		if (people.getAge() > 18) {
 			return "小朋友";

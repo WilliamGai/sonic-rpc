@@ -1,11 +1,11 @@
 package org.sonic.rpc.core.container;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.jetty.nio.SelectChannelConnector;
+import java.util.function.Function;
+
 import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.invoke.ProviderConfig;
+import org.sonic.rpc.core.netty.NettyHttpServer;
+
 /**
  * ProviderProxyFactory使用
  * @author bao
@@ -13,29 +13,25 @@ import org.sonic.rpc.core.invoke.ProviderConfig;
  */
 public class HttpContainer extends Container {
 
-    private AbstractHandler httpHandler;
-    private ProviderConfig providerConfig;
+	private ProviderConfig providerConfig;
+	public Function<String, String> httpCall;
 
-    public HttpContainer(AbstractHandler httpHandler, ProviderConfig providerConfig) {
-	this.httpHandler = httpHandler;
-	this.providerConfig = providerConfig;
-	if(this.providerConfig == null){
-	    this.providerConfig = new ProviderConfig("/invoke", 8080);
+	public HttpContainer(ProviderConfig providerConfig, Function<String, String> httpCall) {
+		this.providerConfig = providerConfig;
+		if (this.providerConfig == null) {
+			this.providerConfig = new ProviderConfig("/invoke", 8080);
+		}
+		Container.container = this;
+		this.httpCall = httpCall;
 	}
-	Container.container = this;
-    }
 
-    public void start() {
-	Server server = new Server();
-	try {
-	    SelectChannelConnector connector = new SelectChannelConnector();
-	    connector.setPort(providerConfig.getPort());
-	    server.setConnectors(new Connector[] { connector });
-	    server.setHandler(httpHandler);
-	    server.start();
-	} catch (Throwable e) {
-	    LogCore.BASE.error("容器异常", e);
+	public void start() {
+		try {
+			NettyHttpServer server = new NettyHttpServer();
+			server.start(providerConfig.getPort(), httpCall);
+			LogCore.BASE.info("netty start");
+		} catch (Throwable e) {
+			LogCore.BASE.error("容器异常", e);
+		}
 	}
-    }
-
 }

@@ -1,15 +1,10 @@
 package org.sonic.rpc.core.proxy;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.mortbay.jetty.handler.AbstractHandler;
 import org.sonic.rpc.core.LogCore;
+import org.sonic.rpc.core.RpcConstants;
 import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.container.Container;
 import org.sonic.rpc.core.container.HttpContainer;
@@ -24,73 +19,69 @@ import org.sonic.rpc.core.serialize.RPCFormater;
 import org.sonic.rpc.core.serialize.RPCParser;
 import org.sonic.rpc.core.serialize.Request;
 
-/***
- * 服务提供者核心是反射 继承 org.mortbay.jetty.handler.AbstractHandler Spring<br>
- * 将"com.sonic.http.rpc.api.SpeakInterface"<br>
- * 和"com.sonic.http.rpc.invoke.ProviderConfig"注入providers
+/**
+ * 服务提供者核心是反射 继承 org.mortbay.jetty.handler.AbstractHandler
  */
 
-public class ProviderProxyFactory extends AbstractHandler {
-    private ProviderConfig providerConfig;
-    public Map<Class<?>, Object> providers = new ConcurrentHashMap<>();// spring注入
+public class ProviderProxyFactory{
+	private ProviderConfig providerConfig;
 
-    private Parser parser = RPCParser.parser;
+	public Map<Class<?>, Object> providers = new ConcurrentHashMap<>();
 
-    private Formater formater = RPCFormater.formater;
+	private Parser parser = RPCParser.parser;
 
-    private Invoker invoker = HttpInvoker.invoker;
+	private Formater formater = RPCFormater.formater;
 
-    public ProviderProxyFactory(Map<Class<?>, Object> providers, ProviderConfig providerConfig) {
-	this.providerConfig = providerConfig;
-	if (Container.container == null) {
-	    new HttpContainer(this, this.providerConfig).start();
+	private Invoker invoker = HttpInvoker.invoker;
+
+	public ProviderProxyFactory(ProviderConfig providerConfig) {
+		this.providerConfig = providerConfig;
+		if (Container.container == null) {
+			new Thread(()->{
+				new HttpContainer(this.providerConfig, this::handleHttpContent).start();
+
+			}).start();
+		}
 	}
-	if(Util.isEmpty(providers)){
-		return;
+
+	public void register(Object obj) {
+		Class<?> interFaceClazz = obj.getClass().getInterfaces()[0];
+		providers.put(interFaceClazz, obj);
+		if (providerConfig != null) {
+			providerConfig.register(interFaceClazz);
+		}
+		LogCore.BASE.info("{} 已经发布,conf={}", interFaceClazz.getSimpleName(), providerConfig);
 	}
-	this.providers = providers;
-	providers.forEach(this::register);
-    }
-
-    public void register(Class<?> clazz, Object object) {
-	providers.put(clazz, object);
-	if (providerConfig != null) {
-	    providerConfig.register(clazz);
+	/***
+	 * 主要RPC 逻辑接收请求信息,解析后调用相关方法并返回<br>
+	 * 需要将异常返回给调用者
+	 * @param reqStr
+	 * @return
+	 */
+	public String handleHttpContent(String reqStr){
+		LogCore.BASE.info("get the reqStr is {}", reqStr);
+		try {
+			if(Util.isEmpty(reqStr)){
+				return RpcConstants.EMPTY_RETURN;
+			}
+			// 将请求参数解析
+			Request rpcRequest = parser.requestParse(reqStr);
+			// 反射请求
+			// Object result = rpcRequest.invoke(ProviderProxyFactory.getInstance().getBeanByClass(rpcRequest.getClazz()));
+			Object result = rpcRequest.invoke(getBeanByClass(rpcRequest.getClazz()));
+			// 响应请求
+			return invoker.response(formater.responseFormat(result));
+		} catch (Exception e) {
+			LogCore.RPC.error("providerProxyFactory handle", e);
+			return e.getMessage();//TODO
+		}
 	}
-	LogCore.BASE.info("{} 已经发布,conf={}", clazz.getSimpleName(), providerConfig);
-    }
 
-    @Override
-    public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
-	    throws IOException, ServletException {
-	String reqStr = request.getParameter("data");
-	LogCore.BASE.info("get the param value={}", reqStr);
-	try {
-	    // 将请求参数解析
-	    Request rpcRequest = parser.requestParse(reqStr);
-	    // 反射请求
-	    // Object result = rpcRequest.invoke(ProviderProxyFactory.getInstance().getBeanByClass(rpcRequest.getClazz()));
-	    Object result = rpcRequest.invoke(getBeanByClass(rpcRequest.getClazz()));
-	    // 相应请求
-	    invoker.response(formater.responseFormat(result), response.getOutputStream());
-	} catch (Exception e) {
-	    LogCore.RPC.error("providerProxyFactory handle", e);
+	public Object getBeanByClass(Class<?> clazz) throws RpcException {
+		Object bean = providers.get(clazz);
+		if (bean != null) {
+			return bean;
+		}
+		throw new RpcException(RpcExceptionCodeEnum.NO_BEAN_FOUND.getCode(), clazz);
 	}
-    }
-
-    public Object getBeanByClass(Class<?> clazz) throws RpcException {
-	Object bean = providers.get(clazz);
-	if (bean != null) {
-	    return bean;
-	}
-	throw new RpcException(RpcExceptionCodeEnum.NO_BEAN_FOUND.getCode(), clazz);
-    }
-
-    public ProviderConfig getProviderConfig() {
-        return providerConfig;
-    }
-
-    public void setProviderConfig(ProviderConfig providerConfig) {
-        this.providerConfig = providerConfig;
-    }
 }

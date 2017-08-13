@@ -1,0 +1,40 @@
+package org.sonic.rpc.provider;
+
+import java.util.Arrays;
+import java.util.List;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+public class TestJson {
+	public static class Point{
+		public int x;
+		public int y;
+		public Point(){};
+		public Point(int x,int y){
+			this.x=x;
+			this.y=y;
+		}
+
+	}
+	public static void main(String[] args) {
+		JSONObject json = new JSONObject();
+		json.put("result", 1);
+		json.put("result", 3);
+		json.put("award_id", 2);
+		String rt = json.toJSONString();
+		
+		System.out.println(json.toJSONString());
+		System.out.println(json.toString());
+		List<String> list = Arrays.asList("a","c","c");
+		JSONArray ja1 =  new JSONArray(); ja1.add(1);ja1.add(2);
+		JSONArray ja2 =  new JSONArray();ja2.add(2);ja2.add(3);
+		JSONArray ja3 =  new JSONArray();ja3.add(4);ja3.add(5);
+		JSONArray ja =  new JSONArray();
+		ja.add(ja1);
+		ja.add(ja2);
+		ja.add(ja3);
+		
+		System.out.println(ja.toJSONString());
+	}
+}

@@ -1,7 +1,5 @@
 package org.sonic.rpc.core.invoke;
 
-import java.io.OutputStream;
-
 import org.sonic.rpc.core.exception.RpcException;
 
 public interface Invoker {
@@ -9,5 +7,5 @@ public interface Invoker {
     String request(String request, String url) throws RpcException;
 
     /** 请求应答 */
-    void response(String response, OutputStream outputStream) throws RpcException;
+    String response(String response) throws RpcException;
 }

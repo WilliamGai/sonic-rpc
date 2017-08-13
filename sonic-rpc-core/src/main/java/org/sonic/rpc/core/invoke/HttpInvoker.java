@@ -1,10 +1,7 @@
 package org.sonic.rpc.core.invoke;
 
-import java.io.OutputStream;
-
 import org.sonic.rpc.core.HttpUtil;
 import org.sonic.rpc.core.exception.RpcException;
-
 
 /***
  * 为consumer提供http服务,请求远程的服务提供者
@@ -14,19 +11,16 @@ import org.sonic.rpc.core.exception.RpcException;
  */
 public class HttpInvoker implements Invoker {
 
-    public static final Invoker invoker = new HttpInvoker();
+	public static final Invoker invoker = new HttpInvoker();
 
-    public String request(String request, String url) throws RpcException {
-	return HttpUtil.sendPost(url, "data=" + request);
-    }
-
-    public void response(String response, OutputStream outputStream) throws RpcException {
-	try {
-	    outputStream.write(response.getBytes("UTF-8"));
-	    outputStream.flush();
-	} catch (Exception e) {
-	    e.printStackTrace();
+	public String request(String request, String url) throws RpcException {
+		return HttpUtil.sendPost(url, request);
 	}
-    }
+
+	public String response(String response) throws RpcException {
+		// outputStream.write(response.getBytes("UTF-8"));
+		// outputStream.flush();
+		return response;
+	}
 
 }
