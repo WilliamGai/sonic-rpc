@@ -6,6 +6,7 @@ import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNoNodeException;
 import org.apache.zookeeper.Watcher;
+import org.sonic.rpc.core.HttpUtil;
 import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.exception.RpcException;
@@ -14,81 +15,80 @@ import org.sonic.rpc.core.zookeeper.functions.ZkCall;
 import org.sonic.rpc.core.zookeeper.functions.ZkCallBack;
 
 public class ZookeeperClient {
-    private volatile Watcher.Event.KeeperState state = Watcher.Event.KeeperState.SyncConnected;
+	private volatile Watcher.Event.KeeperState state = Watcher.Event.KeeperState.SyncConnected;
 
-    private ZkClient zkClient;
+	private ZkClient zkClient;
 
-    public ZookeeperClient(String url) {
-	LogCore.BASE.info("zookeeper url={}", url);
-
-	zkClient = new ZkClient(url);
-	zkClient.setZkSerializer(new ZStringSerializer());// 自定义序列化
-	// Callable<V>
-    }
-
-    public void execute(ZkCall call) {
-	try {
-	    call.doInZk(zkClient);
-	} catch (Exception e) {
-	    e.printStackTrace();
+	public ZookeeperClient(String url) {
+		LogCore.BASE.info("zookeeper url={}", url);
+		LogCore.BASE.info("local ip adress is {}", HttpUtil.getLocalHost());
+		zkClient = new ZkClient(url);
+		zkClient.setZkSerializer(new ZStringSerializer());// 自定义序列化
 	}
-    }
 
-    public <T> T executeResult(ZkCallBack<T> call) {
-	try {
-	    return call.doInZk(zkClient);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return null;
+	public void execute(ZkCall call) {
+		try {
+			call.doInZk(zkClient);
+		} catch (Exception e) {
+			LogCore.BASE.error("zookeeper execute err", e);
+		}
 	}
-    }
 
-    // 创建持久化目录
-    public void createPersistent(String path) {
-	execute(zk -> zk.createPersistent(path, true));
-    }
-
-    // 创建临时目录
-    public void createEphemeral(String path, String data) {
-	execute(zk -> zk.createEphemeralSequential(path, data));
-    }
-
-    // 删除目录
-    public void deleteEphemeral(String path) {
-	execute(zk -> zk.delete(path));
-    }
-
-    // 获取子目录
-    public List<String> getChildren(String path) throws RpcException {
-	try {
-	    List<String> pathList = zkClient.getChildren(path);
-	    if (Util.isEmpty(pathList)) {
-		throw new RpcException(RpcExceptionCodeEnum.NO_PROVIDERS.getCode(), path);
-	    }
-	    return pathList;
-	} catch (ZkNoNodeException e) {
-	    throw new RpcException(e.getMessage(), e, RpcExceptionCodeEnum.NO_PROVIDERS.getCode(), path);
+	public <T> T executeResult(ZkCallBack<T> call) {
+		try {
+			return call.doInZk(zkClient);
+		} catch (Exception e) {
+			LogCore.BASE.error("zookeeper executeResult err", e);
+			return null;
+		}
 	}
-    }
 
-    // 获取节点中的值,因为我们默认是用的String序列化
-    public String getData(String path) {
-	return executeResult(zk -> zk.readData(path));
-    }
+	// 创建持久化目录
+	public void createPersistent(String path) {
+		execute(zk -> zk.createPersistent(path, true));
+	}
 
-    public void delete(String path) {
-	zkClient.delete(path);
-    }
+	// 创建临时目录
+	public void createEphemeral(String path, String data) {
+		execute(zk -> zk.createEphemeralSequential(path, data));
+	}
 
-    public void setWatcher(String path, IZkChildListener watcher) {
-	zkClient.subscribeChildChanges(path, watcher);
-    }
+	// 删除目录
+	public void deleteEphemeral(String path) {
+		execute(zk -> zk.delete(path));
+	}
 
-    public boolean isConnected() {
-	return state == Watcher.Event.KeeperState.SyncConnected;
-    }
+	// 获取子目录
+	public List<String> getChildren(String path) throws RpcException {
+		try {
+			List<String> pathList = zkClient.getChildren(path);
+			if (Util.isEmpty(pathList)) {
+				throw new RpcException(RpcExceptionCodeEnum.NO_PROVIDERS.getCode(), path);
+			}
+			return pathList;
+		} catch (ZkNoNodeException e) {
+			throw new RpcException(e.getMessage(), e, RpcExceptionCodeEnum.NO_PROVIDERS.getCode(), path);
+		}
+	}
 
-    public void doClose() {
-	zkClient.close();
-    }
+	// 获取节点中的值,因为我们默认是用的String序列化
+	public String getData(String path) {
+		return executeResult(zk -> zk.readData(path));
+	}
+
+	public void delete(String path) {
+		zkClient.delete(path);
+	}
+
+	public void setWatcher(String path, IZkChildListener watcher) {
+		zkClient.subscribeChildChanges(path, watcher);
+	}
+
+	public boolean isConnected() {
+		return state == Watcher.Event.KeeperState.SyncConnected;
+	}
+
+	public void doClose() {
+		zkClient.close();
+	}
 }

@@ -20,18 +20,18 @@ public class ConsumerConfig {
 
 	public void setUrl(String url) {
 		this.url = url;
-		if (url.toLowerCase().startsWith("zookeeper://")) {
-			client = new ZookeeperClient(url.toLowerCase().replaceFirst("zookeeper://", ""));
-			LogCore.BASE.info("consumerconf invoke zkclient url={}", url);
-		}
-		LogCore.BASE.info("consumerconf set url={}", url);
+		LogCore.BASE.info("consumerconf invoke zkclient url={}", url);
+	}
+
+	public ConsumerConfig start() {
+		this.client = new ZookeeperClient(url);
+		return this;
 	}
 
 	public String getUrl(Class<?> clazz) throws RpcException {
 		if (client == null) {
 			return url;
 		}
-
 		List<String> urlList = getRpcUrls(clazz);
 		return getCurrentUrl(clazz, urlList);
 	}

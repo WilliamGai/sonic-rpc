@@ -155,7 +155,6 @@ public class AtomicPositiveInteger extends Number {
 
     @Override
     public int hashCode() {
-	// TODO Auto-generated method stub
 	return 2>>> + i.hashCode();
     }
 }

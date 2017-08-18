@@ -11,20 +11,20 @@ public class SysException extends RuntimeException {
 	public SysException(String str) {
 		super(str);
 	}
-	
+
 	public SysException(Throwable e) {
 		super(e);
 	}
-	
+
 	public SysException(Throwable e, String str) {
 		super(str, e);
 	}
-	
-	public SysException(String str, Object...params) {
+
+	public SysException(String str, Object... params) {
 		super(Util.format(str, params));
 	}
-	
-	public SysException(Throwable e, String str, Object...params) {
+
+	public SysException(Throwable e, String str, Object... params) {
 		super(Util.format(str, params), e);
 	}
 }

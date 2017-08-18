@@ -4,8 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -174,5 +177,13 @@ public class HttpUtil {
 			LogCore.BASE.error(TAG_POST + "<<<< error {},path={}", resultCode,path, e);
 		}
 		return null;
+	}
+	public static InetAddress getLocalHost(){
+		try {
+			return Inet4Address.getLocalHost();
+		} catch (UnknownHostException e) {
+			LogCore.BASE.error("get localhost err", e);
+			return null;
+		}
 	}
 }

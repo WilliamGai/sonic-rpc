@@ -24,10 +24,5 @@
 			<artifactId>sonic-rpc-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.sonic</groupId>
-			<artifactId>sonic-rpc-api</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
 	</dependencies>
 </project>

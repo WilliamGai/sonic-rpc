@@ -1,5 +1,6 @@
 package org.sonic.rpc.core.container;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.sonic.rpc.core.LogCore;
@@ -14,24 +15,22 @@ import org.sonic.rpc.core.netty.NettyHttpServer;
 public class HttpContainer extends Container {
 
 	private ProviderConfig providerConfig;
-	public Function<String, String> httpCall;
+	public Function<String, String> httpRequestCallBack;
 
 	public HttpContainer(ProviderConfig providerConfig, Function<String, String> httpCall) {
 		this.providerConfig = providerConfig;
-		if (this.providerConfig == null) {
-			this.providerConfig = new ProviderConfig("/invoke", 8080);
-		}
+		Objects.requireNonNull(providerConfig);
 		Container.container = this;
-		this.httpCall = httpCall;
+		this.httpRequestCallBack = httpCall;
 	}
 
 	public void start() {
 		try {
 			NettyHttpServer server = new NettyHttpServer();
-			server.start(providerConfig.getPort(), httpCall);
+			server.start(providerConfig.getPort(), httpRequestCallBack);
 			LogCore.BASE.info("netty start");
 		} catch (Throwable e) {
-			LogCore.BASE.error("容器异常", e);
+			LogCore.BASE.error("netty 异常", e);
 		}
 	}
 }

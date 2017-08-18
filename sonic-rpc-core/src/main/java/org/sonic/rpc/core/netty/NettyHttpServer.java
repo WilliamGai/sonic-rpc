@@ -2,8 +2,6 @@ package org.sonic.rpc.core.netty;
 
 import java.util.function.Function;
 
-import org.sonic.rpc.core.LogCore;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -42,9 +40,9 @@ public class NettyHttpServer {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		NettyHttpServer server = new NettyHttpServer();
-		LogCore.BASE.info("Http Server listening on 8844 ...");
-		server.start(8844,msg -> msg);
-	}
+//	public static void main(String[] args) throws Exception {
+//		NettyHttpServer server = new NettyHttpServer();
+//		LogCore.BASE.info("Http Server listening on 8844 ...");
+//		server.start(8844,msg -> msg);
+//	}
 }

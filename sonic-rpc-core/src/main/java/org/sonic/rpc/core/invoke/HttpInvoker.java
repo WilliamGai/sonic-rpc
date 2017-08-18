@@ -16,10 +16,11 @@ public class HttpInvoker implements Invoker {
 	public String request(String request, String url) throws RpcException {
 		return HttpUtil.sendPost(url, request);
 	}
-
+	/**
+	 * outputStream.write(response.getBytes("UTF-8"));
+	 * outputStream.flush();
+	 */
 	public String response(String response) throws RpcException {
-		// outputStream.write(response.getBytes("UTF-8"));
-		// outputStream.flush();
 		return response;
 	}
 

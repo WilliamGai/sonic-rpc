@@ -1,42 +1,46 @@
 package org.sonic.rpc.core.serialize;
 
 import java.io.Serializable;
-/**服务提供者使用反射*/
+
+/** 服务提供者使用反射 */
 public class Request implements Serializable {
+	private static final long serialVersionUID = -3076866403581737243L;
 
-    private static final long serialVersionUID = -3145939364922415428L;
+	private Class<?> clazz;
+	private String methodName;
+//	private Class<?>[] parameterTypes;fastJson不支持Class<?>[]反序列化
+	private String [] parameterTypeNames;
+	private Object[] arguments;
 
-    private Class<?> clazz;
+	public Class<?> getClazz() {
+		return clazz;
+	}
 
-    private String method;
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
 
-    private Object param;
+	public String getMethodName() {
+		return methodName;
+	}
 
-    public Class<?> getClazz() {
-	return clazz;
-    }
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
+	}
 
-    public void setClazz(Class<?> clazz) {
-	this.clazz = clazz;
-    }
+	public String[] getParameterTypeNames() {
+		return parameterTypeNames;
+	}
 
-    public String getMethod() {
-	return method;
-    }
+	public void setParameterTypeNames(String[] parameterTypeNames) {
+		this.parameterTypeNames = parameterTypeNames;
+	}
 
-    public void setMethod(String method) {
-	this.method = method;
-    }
+	public Object[] getArguments() {
+		return arguments;
+	}
 
-    public Object getParam() {
-	return param;
-    }
-
-    public void setParam(Object param) {
-	this.param = param;
-    }
-
-    public Object invoke(Object bean) throws Exception {
-	return clazz.getMethod(method, param.getClass()).invoke(bean, param);
-    }
+	public void setArguments(Object[] arguments) {
+		this.arguments = arguments;
+	}
 }

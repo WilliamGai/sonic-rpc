@@ -1,8 +1,6 @@
 package org.sonic.rpc.core.netty;
 import java.net.URI;
 
-import org.sonic.rpc.core.LogCore;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -60,9 +58,9 @@ public class NettyHttpClient {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		NettyHttpClient client = new NettyHttpClient();
-		client.connect("127.0.0.1", 8844);
-		LogCore.BASE.info("start!!!!");
-	}
+//	public static void main(String[] args) throws Exception {
+//		NettyHttpClient client = new NettyHttpClient();
+//		client.connect("127.0.0.1", 8844);
+//		LogCore.BASE.info("start!!!!");
+//	}
 }

@@ -9,15 +9,16 @@ import org.sonic.rpc.core.zookeeper.ZookeeperClient;
 
 public class ProviderConfig {
 	private String target;
-	private Integer port;// 如果target是zookeeper,则port不起作用了
+	private Integer port;
 	private ZookeeperClient client;
 
 	public ProviderConfig(String target, Integer port) {
 		this.target = target;
 		this.port = port;
-		if (target.toLowerCase().startsWith("zookeeper://")) {
-			client = new ZookeeperClient(target.toLowerCase().replaceFirst("zookeeper://", ""));
-		}
+	}
+	public ProviderConfig start(){
+		client = new ZookeeperClient(this.target);
+		return this;
 	}
 
 	public void register(Class<?> clazz) {
@@ -39,7 +40,6 @@ public class ProviderConfig {
 			LogCore.RPC.error("getNodeInfo", e);
 			return null;
 		}
-
 	}
 
 	public String getTarget() {
