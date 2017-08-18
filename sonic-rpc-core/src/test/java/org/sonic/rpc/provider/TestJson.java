@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.serialize.JSONUtil;
+import org.sonic.rpc.core.utils.JSONUtil;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

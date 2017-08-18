@@ -1,4 +1,4 @@
-package org.sonic.rpc.core.serialize;
+package org.sonic.rpc.core.utils;
 
 import org.sonic.rpc.core.exception.SerializeException;
 

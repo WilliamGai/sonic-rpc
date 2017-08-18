@@ -1,8 +1,8 @@
-package org.sonic.rpc.core.zookeeper;
+package org.sonic.rpc.core.zookeeper.interfaces;
 
 import org.sonic.rpc.core.exception.SerializeException;
 
-public interface Serializer<T> {
+public interface ZSerializer<T> {
 
     byte[] serialize(T data) throws SerializeException;
 

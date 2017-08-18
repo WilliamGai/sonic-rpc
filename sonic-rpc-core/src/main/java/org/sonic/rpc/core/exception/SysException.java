@@ -1,6 +1,6 @@
 package org.sonic.rpc.core.exception;
 
-import org.sonic.rpc.core.Util;
+import org.sonic.rpc.core.utils.Util;
 
 /**
  * 当程序出现系统级错误，不希望用户看到出错信息的时候抛出此异常

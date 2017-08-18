@@ -1,29 +1,27 @@
 package org.sonic.rpc.consumer;
 
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.invoke.ConsumerConfig;
 import org.sonic.rpc.core.proxy.ConsumerProxyFactory;
+import org.sonic.rpc.core.proxy.handler.ConsumerHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 //class org.sonic.rpc.consumer.ConsumerAppConfig$$EnhancerBySpringCGLIB$$3b554800
 @Configuration
-public class ConsumerAppConfig {
+public class ConsumerConfig {
 
 	@Bean
-	ConsumerConfig getConsumerConfig(@Value("${consumer.url}") String url) {
-		ConsumerConfig consumerCf = new ConsumerConfig();
-		LogCore.BASE.info("consumer.url=============={}", url);
-		consumerCf.setUrl(url);
-		return consumerCf.start();
+	ConsumerHandler getConsumerHandler(@Value("${consumer.url}") String url) {
+		LogCore.BASE.info("ConsumerHandler init, url is {}", url);
+		return new ConsumerHandler(url).start();
 	}
 
 	@Bean
 	@Autowired
-	ConsumerProxyFactory getConsumerProxyFactory(ConsumerConfig consumerConfig) {
+	ConsumerProxyFactory getConsumerProxyFactory(ConsumerHandler consumerHandler) {
 		ConsumerProxyFactory cf = new ConsumerProxyFactory();
-		cf.setConsumerConfig(consumerConfig);
+		cf.setConsumerConfig(consumerHandler);
 		return cf;
 	}
 

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.TimeUtil;
+import org.sonic.rpc.core.utils.TimeUtil;
 import org.sonic.rpc.core.zookeeper.ZStringSerializer;
 
 

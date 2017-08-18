@@ -6,11 +6,11 @@ import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.exception.ZkNoNodeException;
 import org.apache.zookeeper.Watcher;
-import org.sonic.rpc.core.HttpUtil;
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.exception.RpcException;
 import org.sonic.rpc.core.exception.RpcExceptionCodeEnum;
+import org.sonic.rpc.core.utils.HttpUtil;
+import org.sonic.rpc.core.utils.Util;
 import org.sonic.rpc.core.zookeeper.functions.ZkCall;
 import org.sonic.rpc.core.zookeeper.functions.ZkCallBack;
 

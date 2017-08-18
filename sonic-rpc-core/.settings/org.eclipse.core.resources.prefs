@@ -1,9 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
 encoding//src/main/java/org/sonic/rpc/core/exception/RpcExceptionCodeEnum.java=UTF-8
-encoding//src/main/java/org/sonic/rpc/core/invoke/Invoker.java=UTF-8
-encoding//src/main/java/org/sonic/rpc/core/serialize/Formater.java=UTF-8
-encoding//src/main/java/org/sonic/rpc/core/serialize/Parser.java=UTF-8
+encoding//src/main/java/org/sonic/rpc/core/serialize/interfaces/Formater.java=UTF-8
+encoding//src/main/java/org/sonic/rpc/core/serialize/interfaces/Parser.java=UTF-8
 encoding//src/main/java/org/sonic/rpc/core/zookeeper/ZookeeperClient.java=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

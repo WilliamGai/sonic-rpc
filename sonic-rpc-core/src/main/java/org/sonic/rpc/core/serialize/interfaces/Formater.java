@@ -1,4 +1,7 @@
-package org.sonic.rpc.core.serialize;
+package org.sonic.rpc.core.serialize.interfaces;
+
+import org.sonic.rpc.core.serialize.Request;
+import org.sonic.rpc.core.serialize.Result;
 
 public interface Formater {
 	/**
@@ -9,5 +12,5 @@ public interface Formater {
 	String requestFormat(Request request);
 
 	/** @param param 响应的结果 */
-	String responseFormat(Object param);
+	String responseFormat(Result result);
 }

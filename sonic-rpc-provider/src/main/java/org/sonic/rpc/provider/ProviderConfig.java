@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.annotation.SService;
-import org.sonic.rpc.core.invoke.ProviderConfig;
 import org.sonic.rpc.core.proxy.ProviderProxyFactory;
+import org.sonic.rpc.core.proxy.handler.ProviderHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -18,19 +18,19 @@ import org.springframework.context.annotation.Configuration;
  * @date 2017年8月10日 下午4:15:40
  */
 @Configuration
-public class ProviderAppConfig {
+public class ProviderConfig {
 	
 	@Bean
-	ProviderConfig getProviderConfig(
+	ProviderHandler getProviderHandler(
 			@Value("${provider.target}") String target,
 			@Value("${provider.port}") int port) {
 		LogCore.BASE.info("target=={}",target,port);
-		return new ProviderConfig(target, port).start();
+		return new ProviderHandler(target, port).start();
 	}
 	
 	@Bean
 	@Autowired
-	ProviderProxyFactory getProviderProxyFactory(ProviderConfig providerConfig, ApplicationContext ct){
+	ProviderProxyFactory getProviderProxyFactory(ProviderHandler providerConfig, ApplicationContext ct){
 		ProviderProxyFactory pf = new ProviderProxyFactory(providerConfig);
 		Map<String,Object> map = ct.getBeansWithAnnotation(SService.class);
 		map.values().forEach(pf::register);

@@ -1,4 +1,4 @@
-package org.sonic.rpc.core;
+package org.sonic.rpc.core.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

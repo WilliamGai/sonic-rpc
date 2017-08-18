@@ -8,9 +8,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.StepWatchUtil;
-import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.proxy.ConsumerProxyFactory;
+import org.sonic.rpc.core.utils.StepWatchUtil;
+import org.sonic.rpc.core.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

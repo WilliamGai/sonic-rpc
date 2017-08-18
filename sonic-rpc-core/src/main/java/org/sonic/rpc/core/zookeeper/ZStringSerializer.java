@@ -3,6 +3,7 @@ package org.sonic.rpc.core.zookeeper;
 import org.I0Itec.zkclient.exception.ZkMarshallingError;
 import org.I0Itec.zkclient.serialize.ZkSerializer;
 import org.sonic.rpc.core.serialize.Request;
+import org.sonic.rpc.core.serialize.StringSerializer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

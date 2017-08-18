@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.sonic.rpc.core.Util;
+import org.sonic.rpc.core.utils.Util;
 
 /***
  * 随机生成车牌号

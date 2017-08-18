@@ -1,6 +1,6 @@
 package org.sonic.rpc.core.exception;
 
-import org.sonic.rpc.core.Util;
+import org.sonic.rpc.core.utils.Util;
 
 public class SerializeException extends RuntimeException {
 

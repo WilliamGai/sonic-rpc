@@ -1,4 +1,6 @@
-package org.sonic.rpc.core;
+package org.sonic.rpc.core.utils;
+
+import org.sonic.rpc.core.RpcConstants;
 
 public class RpcUtil {
     public static String getZkRootPath(Class<?> clazz) {

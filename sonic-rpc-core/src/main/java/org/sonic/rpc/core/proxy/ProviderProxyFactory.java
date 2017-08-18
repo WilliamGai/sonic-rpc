@@ -7,41 +7,31 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.RpcConstants;
-import org.sonic.rpc.core.Util;
 import org.sonic.rpc.core.container.Container;
 import org.sonic.rpc.core.container.HttpContainer;
 import org.sonic.rpc.core.exception.RpcException;
 import org.sonic.rpc.core.exception.RpcExceptionCodeEnum;
-import org.sonic.rpc.core.invoke.HttpInvoker;
-import org.sonic.rpc.core.invoke.Invoker;
-import org.sonic.rpc.core.invoke.ProviderConfig;
-import org.sonic.rpc.core.serialize.Formater;
-import org.sonic.rpc.core.serialize.Parser;
-import org.sonic.rpc.core.serialize.JsonFormater;
-import org.sonic.rpc.core.serialize.JSONParser;
+import org.sonic.rpc.core.proxy.handler.ProviderHandler;
+import org.sonic.rpc.core.serialize.RPCSerializer;
 import org.sonic.rpc.core.serialize.Request;
+import org.sonic.rpc.core.serialize.Result;
+import org.sonic.rpc.core.utils.Util;
 
 /**
  * 服务提供者核心是反射 继承 org.mortbay.jetty.handler.AbstractHandler
  */
 
 public class ProviderProxyFactory {
-	private ProviderConfig providerConfig;
+	private ProviderHandler providerHandler;
 
 	public Map<Class<?>, Object> providers = new ConcurrentHashMap<>();
 
-	private Parser parser = JSONParser.parser;
-
-	private Formater formater = JsonFormater.formater;
-
-	private Invoker invoker = HttpInvoker.invoker;
-
-	public ProviderProxyFactory(ProviderConfig providerConfig) {
-		this.providerConfig = providerConfig;
+	public ProviderProxyFactory(ProviderHandler providerHandler) {
+		this.providerHandler = providerHandler;
 		if (Container.container == null) {
 			// netty需要另起线程,如果是jetty就不需要
 			new Thread(() -> {
-				new HttpContainer(this.providerConfig, this::handleHttpContent).start();
+				new HttpContainer(this.providerHandler.getPort(), this::handleHttpContent).start();
 
 			}).start();
 		}
@@ -50,8 +40,8 @@ public class ProviderProxyFactory {
 	public void register(Object obj) {
 		Class<?> interFaceClazz = obj.getClass().getInterfaces()[0];
 		providers.put(interFaceClazz, obj);
-		providerConfig.register(interFaceClazz);
-		LogCore.BASE.info("{} 已经发布,conf={}", interFaceClazz.getSimpleName(), providerConfig);
+		providerHandler.register(interFaceClazz);
+		LogCore.BASE.info("{} 已经发布,conf={}", interFaceClazz.getSimpleName(), providerHandler);
 	}
 
 	/***
@@ -68,19 +58,20 @@ public class ProviderProxyFactory {
 				return RpcConstants.EMPTY_RETURN;
 			}
 			// 将请求参数解析
-			Request req = parser.requestParse(reqStr);
+			Request req = RPCSerializer.INSTANCE.requestParse(reqStr);
 			// 反射请求
 			// Object result = rpcRequest.invoke(ProviderProxyFactory.getInstance().getBeanByClass(rpcRequest.getClazz()));
 			Class<?> clazz = req.getClazz();
 			String methodName = req.getMethodName();
 			Object[] args = req.getArguments();
 			String[] parameterTypeNames = req.getParameterTypeNames();
-			Class<?>[] parameterTypes = Arrays.stream(parameterTypeNames).map(this::classForName).toArray(Class[]::new);
+			Class<?>[] parameterTypes = Arrays.stream(parameterTypeNames).map(this::classForName)
+			            .toArray(Class[]::new);
 			Method method = clazz.getMethod(methodName, parameterTypes);
 			Object bean = getBeanByClass(clazz);
 			Object result = method.invoke(bean, args);
-			// 响应请求
-			return invoker.response(formater.responseFormat(result));
+			Result rst = new Result().setData(result);
+			return RPCSerializer.INSTANCE.responseFormat(rst);
 		} catch (Exception e) {
 			LogCore.RPC.error("providerProxyFactory handle error", e);
 			return e.getMessage();// TODO

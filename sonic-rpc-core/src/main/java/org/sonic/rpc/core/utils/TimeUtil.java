@@ -1,4 +1,4 @@
-package org.sonic.rpc.core;
+package org.sonic.rpc.core.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Supplier;
+
+import org.sonic.rpc.core.LogCore;
 
 public class TimeUtil {
 	public static final int HOUR_SECONDS = 3600;

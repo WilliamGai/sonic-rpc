@@ -1,30 +1,28 @@
-package org.sonic.rpc.core.invoke;
+package org.sonic.rpc.core.proxy.handler;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.RpcUtil;
+import org.sonic.rpc.core.utils.RpcUtil;
 import org.sonic.rpc.core.zookeeper.ZookeeperClient;
 
-public class ProviderConfig {
+public class ProviderHandler {
 	private String target;
 	private Integer port;
 	private ZookeeperClient client;
 
-	public ProviderConfig(String target, Integer port) {
+	public ProviderHandler(String target, Integer port) {
 		this.target = target;
 		this.port = port;
 	}
-	public ProviderConfig start(){
+
+	public ProviderHandler start() {
 		client = new ZookeeperClient(this.target);
 		return this;
 	}
 
 	public void register(Class<?> clazz) {
-		if (client == null) {
-			return;
-		}
 		String path = RpcUtil.getZkRootPath(clazz);
 		String childrenPath = path + "/node";
 		client.createPersistent(path);
@@ -33,7 +31,7 @@ public class ProviderConfig {
 
 	public String getNodeInfo() {
 		try {
-			String info = "http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + getPort();
+			String info = "http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + port;
 			LogCore.BASE.info("info={}", info);
 			return info;
 		} catch (UnknownHostException e) {
@@ -46,15 +44,7 @@ public class ProviderConfig {
 		return target;
 	}
 
-	public void setTarget(String target) {
-		this.target = target;
-	}
-
 	public Integer getPort() {
 		return port;
-	}
-
-	public void setPort(Integer port) {
-		this.port = port;
 	}
 }

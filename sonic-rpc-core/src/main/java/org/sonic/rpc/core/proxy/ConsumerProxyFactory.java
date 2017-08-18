@@ -6,14 +6,11 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
 import org.sonic.rpc.core.LogCore;
-import org.sonic.rpc.core.invoke.ConsumerConfig;
-import org.sonic.rpc.core.invoke.HttpInvoker;
-import org.sonic.rpc.core.invoke.Invoker;
-import org.sonic.rpc.core.serialize.Formater;
-import org.sonic.rpc.core.serialize.Parser;
+import org.sonic.rpc.core.proxy.handler.ConsumerHandler;
+import org.sonic.rpc.core.serialize.RPCSerializer;
 import org.sonic.rpc.core.serialize.Request;
-import org.sonic.rpc.core.serialize.JsonFormater;
-import org.sonic.rpc.core.serialize.JSONParser;
+import org.sonic.rpc.core.serialize.Result;
+import org.sonic.rpc.core.utils.HttpUtil;
 
 /**
  * 消费者,核心是代理
@@ -21,13 +18,7 @@ import org.sonic.rpc.core.serialize.JSONParser;
  * @author 继承 java.lang.reflect.InvocationHandler
  */
 public class ConsumerProxyFactory implements InvocationHandler {
-	private ConsumerConfig consumerConfig;// spring注入 consumerConfig
-
-	private Parser parser = JSONParser.parser;
-
-	private Formater formater = JsonFormater.formater;
-
-	private Invoker invoker = HttpInvoker.invoker;
+	private ConsumerHandler consumerHandler;// spring注入 consumerHandler
 
 	/* create()创建工厂bean speakInterface Class<?> interfaceClass = Class.forName(clazz); */
 	public Object create(Class<?> interfaceClass) {
@@ -50,16 +41,13 @@ public class ConsumerProxyFactory implements InvocationHandler {
 		String[] parameterTypeNames = Arrays.stream(parameterTypes).map(Class::getName).toArray(String[]::new);
 		req.setParameterTypeNames(parameterTypeNames);
 		req.setArguments(args);
-		String reqStr = formater.requestFormat(req);
-		String resb = invoker.request(reqStr, consumerConfig.getUrl(clazz));//调用远程接口
-		return parser.rsponseParse(resb);
+		String reqStr = RPCSerializer.INSTANCE.requestFormat(req);
+		String resb =  HttpUtil.sendPost(consumerHandler.getUrl(clazz), reqStr);//调用远程接口
+		Result result = RPCSerializer.INSTANCE.rsponseParse(resb);
+		return result.data;
 	}
 
-	public ConsumerConfig getConsumerConfig() {
-		return consumerConfig;
-	}
-
-	public void setConsumerConfig(ConsumerConfig consumerConfig) {
-		this.consumerConfig = consumerConfig;
+	public void setConsumerConfig(ConsumerHandler consumerHandler) {
+		this.consumerHandler = consumerHandler;
 	}
 }

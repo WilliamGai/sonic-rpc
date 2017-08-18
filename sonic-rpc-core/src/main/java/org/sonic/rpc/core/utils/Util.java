@@ -1,4 +1,4 @@
-package org.sonic.rpc.core;
+package org.sonic.rpc.core.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.sonic.rpc.core.LogCore;
 import org.sonic.rpc.core.exception.SysException;
 
 import com.alibaba.fastjson.JSON;

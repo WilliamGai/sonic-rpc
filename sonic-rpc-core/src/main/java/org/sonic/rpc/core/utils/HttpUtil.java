@@ -1,4 +1,4 @@
-package org.sonic.rpc.core;
+package org.sonic.rpc.core.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -11,6 +11,8 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.sonic.rpc.core.LogCore;
 
 /**
  * UTF-8
